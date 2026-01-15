@@ -1,4 +1,7 @@
 import React, { Component } from "react";
+import Statistics from "./Statistics";
+import FeedbackOptions from "./FeedbackOptions";
+import Notification from "./Notification";
 
 export default class FeedbackCounter extends Component {
   state = {
@@ -24,22 +27,24 @@ export default class FeedbackCounter extends Component {
 
   render() {
     const { good, neutral, bad } = this.state;
+    const options = ["good", "neutral", "bad"];
 
     return (
       <div>
         <h1>Please leave feedback</h1>
-        <div>
-          <button onClick={() => this.addFeedback("good")}>Good</button>
-          <button onClick={() => this.addFeedback("neutral")}>Neutral</button>
-          <button onClick={() => this.addFeedback("bad")}>Bad</button>
-        </div>
 
-        <h2>Statistics</h2>
-        <p>Good: {good}</p>
-        <p>Neutral: {neutral}</p>
-        <p>Bad: {bad}</p>
-        <p>Total: {good + neutral + bad}</p>
-        <p>Positive feedback: {this.countPositiveFeedbackPercentage()}%</p>
+        <FeedbackOptions options={options} onLeaveFeedback={this.addFeedback} />
+        {good + neutral + bad == 0 ? (
+          <Notification message="There is no feedback" />
+        ) : (
+          <Statistics
+            good={good}
+            neutral={neutral}
+            bad={bad}
+            total={good + bad + neutral}
+            positivePercentage={this.countPositiveFeedbackPercentage()}
+          />
+        )}
       </div>
     );
   }
